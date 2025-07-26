@@ -24,7 +24,7 @@
         <!-- Workouts Section -->
         <section id="workouts" class="py-12">
             <h2 class="text-3xl font-bold text-center mb-8">Your Workout Plan</h2>
-            <p class="text-lg text-gray-700 text-center mb-6">Plan your workouts by clicking a date to add exercises for that day. Each exercise shows Set 1 with a reps counter and a checkmark (yellow for pending, green for complete). Click the delete button to remove an exercise. All data is saved even after you refresh the page.</p>
+            <p class="text-lg text-gray-700 text-center mb-6">Plan your workouts by clicking a date to add exercises for that day. Each exercise shows Set 1 with reps and weight counters and a checkmark (yellow for pending, green for complete). Click the delete button to remove an exercise. All data is saved even after you refresh the page.</p>
             <div class="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow-lg">
                 <!-- Calendar Section -->
                 <div class="mb-6">
@@ -52,7 +52,7 @@
                 <div id="date-exercise-form" class="mb-6 hidden">
                     <h3 class="text-xl font-semibold mb-4">Add Exercise for <span id="selected-date"></span></h3>
                     <div class="flex flex-col sm:flex-row gap-4">
-                        <input type="text" id="date-exercise-name" class="w-full sm:w-2/3 p-2 border rounded-lg" placeholder="Exercise Name (e.g., Push-Ups)">
+                        <input type="text" id="date-exercise-name" class="w-full sm:w-2/3 p-2 border rounded-lg" placeholder="Exercise Name (e.g., Bench Press)">
                         <button id="add-date-exercise" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">Add Exercise</button>
                     </div>
                     <ul id="date-exercise-list" class="grid grid-cols-1 gap-4 mt-4">
@@ -172,7 +172,7 @@
                     // Exercise header
                     const header = document.createElement('div');
                     header.className = 'flex justify-between items-center mb-2';
-                    header.innerHTML = `<strong>${exercise.name}</strong> - Set 1`;
+                    header.innerHTML = `<strong>${exercise.name}</strong>`;
                     const buttonContainer = document.createElement('div');
                     buttonContainer.className = 'flex gap-2 items-center';
                     const checkmark = document.createElement('button');
@@ -198,39 +198,113 @@
                     header.appendChild(buttonContainer);
                     li.appendChild(header);
 
-                    // Reps counter
+                    // Set card
+                    const setCard = document.createElement('div');
+                    setCard.className = 'p-4 bg-white rounded-lg shadow';
+                    const setLabel = document.createElement('div');
+                    setLabel.className = 'text-center mb-2';
+                    setLabel.textContent = 'Set 1';
+
+                    // Reps and Weight containers
+                    const countersContainer = document.createElement('div');
+                    countersContainer.className = 'flex justify-between gap-4';
+
+                    // Reps container
                     const repsContainer = document.createElement('div');
-                    repsContainer.className = 'flex items-center justify-center gap-4 mb-2';
-                    const minusButton = document.createElement('button');
-                    minusButton.className = 'bg-gray-300 text-black px-2 py-1 rounded-lg hover:bg-gray-400';
-                    minusButton.textContent = '-';
-                    minusButton.addEventListener('click', () => {
+                    repsContainer.className = 'flex flex-col items-center w-1/2';
+                    const repsLabel = document.createElement('div');
+                    repsLabel.textContent = `Reps: ${exercise.reps}`;
+                    const repsButtonGroup = document.createElement('div');
+                    repsButtonGroup.className = 'flex gap-2 mt-1';
+                    const repsMinusButton = document.createElement('button');
+                    repsMinusButton.className = 'bg-gray-300 text-black px-2 py-1 rounded-lg hover:bg-gray-400';
+                    repsMinusButton.textContent = '-';
+                    repsMinusButton.addEventListener('click', () => {
                         exercise.reps = Math.max(0, exercise.reps - 1);
                         saveDateExercises(exercises);
                         loadDateExercises();
                     });
-                    const repsDisplay = document.createElement('span');
-                    repsDisplay.textContent = exercise.reps;
-                    const plusButton = document.createElement('button');
-                    plusButton.className = 'bg-gray-300 text-black px-2 py-1 rounded-lg hover:bg-gray-400';
-                    plusButton.textContent = '+';
-                    plusButton.addEventListener('click', () => {
+                    const repsPlusButton = document.createElement('button');
+                    repsPlusButton.className = 'bg-gray-300 text-black px-2 py-1 rounded-lg hover:bg-gray-400';
+                    repsPlusButton.textContent = '+';
+                    repsPlusButton.addEventListener('click', () => {
                         exercise.reps = exercise.reps + 1;
                         saveDateExercises(exercises);
                         loadDateExercises();
                     });
-                    repsContainer.appendChild(minusButton);
-                    repsContainer.appendChild(repsDisplay);
-                    repsContainer.appendChild(plusButton);
-                    li.appendChild(repsContainer);
+                    repsButtonGroup.appendChild(repsMinusButton);
+                    repsButtonGroup.appendChild(repsPlusButton);
+                    repsContainer.appendChild(repsLabel);
+                    repsContainer.appendChild(repsButtonGroup);
 
-                    // Reps card
-                    const repsCard = document.createElement('div');
-                    repsCard.className = 'p-4 bg-white rounded-lg shadow text-center';
-                    
-                    li.appendChild(repsCard);
-                    repsCard.textContent = `Reps: ${exercise.reps}`;
+                    // Weight container
+                    const weightContainer = document.createElement('div');
+                    weightContainer.className = 'flex flex-col items-center w-1/2';
+                    const weightLabel = document.createElement('div');
+                    weightLabel.textContent = `Weight: ${exercise.weight || 0} lbs`;
+                    const weightButtonGroup = document.createElement('div');
+                    weightButtonGroup.className = 'flex gap-2 mt-1';
+                    const weightMinusButton = document.createElement('button');
+                    weightMinusButton.className = 'bg-gray-300 text-black px-2 py-1 rounded-lg hover:bg-gray-400';
+                    weightMinusButton.textContent = '-';
+                    weightMinusButton.addEventListener('click', () => {
+                        exercise.weight = Math.max(0, (exercise.weight || 0) - 1);
+                        saveDateExercises(exercises);
+                        loadDateExercises();
+                    });
+                    const weightPlusButton = document.createElement('button');
+                    weightPlusButton.className = 'bg-gray-300 text-black px-2 py-1 rounded-lg hover:bg-gray-400';
+                    weightPlusButton.textContent = '+';
+                    weightPlusButton.addEventListener('click', () => {
+                        exercise.weight = (exercise.weight || 0) + 1;
+                        saveDateExercises(exercises);
+                        loadDateExercises();
+                    });
+                    weightButtonGroup.appendChild(weightMinusButton);
+                    weightButtonGroup.appendChild(weightPlusButton);
+                    weightContainer.appendChild(weightLabel);
+                    weightContainer.appendChild(weightButtonGroup);
 
+                    countersContainer.appendChild(repsContainer);
+                    countersContainer.appendChild(weightContainer);
+                    setCard.appendChild(setLabel);
+                    setCard.appendChild(countersContainer);
+                    li.appendChild(setCard);
+
+                    dateExerciseList.appendChild(li);
+
+                    // Add set button
+                    const setNavContainer = document.createElement('div');
+                    setNavContainer.className = 'flex justify-center gap-4 mt-2';
+                    const addSetButton = document.createElement('button');
+                    addSetButton.className = 'bg-blue-500 text-white px-2 py-1 rounded-lg hover:bg-blue-600';
+                    addSetButton.textContent = 'Add Set';
+                    addSetButton.addEventListener('click', () => {
+                        exercise.sets += 1;
+                        exercise.setData.push({ reps: 0, weight: 0 });
+                        saveDateExercises(exercises);
+                        loadDateExercises();
+                    });
+                    const removeSetButton = document.createElement('button');
+                    removeSetButton.className = 'bg-red-500 text-white px-2 py-1 rounded-lg hover:bg-red-600';
+                    removeSetButton.textContent = 'Remove Set';
+                    removeSetButton.disabled = exercise.sets <= 1; 
+                    removeSetButton.addEventListener('click', () => {
+                        if (exercise.sets > 1) {
+                            exercise.sets -= 1;
+                            exercise.setData.pop();
+                            if (exercise.currentSet >= exercise.sets) {
+                                exercise.currentSet = exercise.sets - 1;
+                            }
+                            saveDateExercises(exercises);
+                            loadDateExercises();
+                        }
+                    })
+                    setNavContainer.appendChild(addSetButton);
+                    setNavContainer.appendChild(removeSetButton);
+                    setCard.appendChild(setNavContainer);
+
+                    li.appendChild(setCard);
                     dateExerciseList.appendChild(li);
                 });
             }
@@ -273,7 +347,13 @@
                 if (name && selectedDate) {
                     const dateKey = selectedDate.toDateString();
                     const exercises = JSON.parse(localStorage.getItem(`exercises_${dateKey}`)) || [];
-                    exercises.push({ name, completed: false, reps: 0 });
+                    exercises.push({
+                        name,
+                        completed: false,
+                        sets: 1,
+                        currentSet: 0,
+                        setData: [{ reps: 0, weight: 0 }]
+                    });
                     saveDateExercises(exercises);
                     loadDateExercises();
                     document.getElementById('date-exercise-name').value = '';
