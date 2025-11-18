@@ -1,4 +1,4 @@
- // Calendar Functionality
+        //Calendar Functionality
         function renderCalendar() {
             const today = new Date();
             let currentDate = new Date(today);
@@ -98,7 +98,7 @@
                     // Exercise header
                     const header = document.createElement('div');
                     header.className = 'flex justify-between items-center mb-2';
-                    header.innerHTML = `<strong>${exercise.name}</strong> - Set 1`;
+                    header.innerHTML = `<strong>${exercise.name}</strong> `;
                     const buttonContainer = document.createElement('div');
                     buttonContainer.className = 'flex gap-2 items-center';
                     const checkmark = document.createElement('button');
@@ -213,3 +213,4 @@
         window.addEventListener('load', () => {
             renderCalendar();
         });
+

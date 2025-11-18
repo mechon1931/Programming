@@ -281,8 +281,8 @@
                     addSetButton.textContent = 'Add Set';
                     addSetButton.addEventListener('click', () => {
                         exercise.sets += 1;
-                        exercise.setData.push({ reps: 0, weight: 0 });
-                        saveDateExercises(exercises);
+                        if (!Array.isArray(exercise.setData)) exercise.setData = [];
+                        exercise.setData.push({ reps: 0, weight: 0 });                        saveDateExercises(exercises);
                         loadDateExercises();
                     });
                     const removeSetButton = document.createElement('button');
